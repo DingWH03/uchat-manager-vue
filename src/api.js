@@ -30,6 +30,43 @@ export async function getOnlineTree() {
   }
 }
 
+export async function deleteOnlineSession(session_id) {
+  try {
+    const response = await axios.delete('/api/manager/online/session', {
+      params: { session_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}
+
+
+export async function deleteUser(user_id) {
+  try {
+    const response = await axios.delete('/api/manager/user', {
+      params: { user_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}
+
 // 检查当前 session 是否有效且身份为管理员
 export const checkSession = async () => {
   try {
@@ -90,3 +127,4 @@ export function logout() {
   // 可选重定向
   window.location.href = '/login'
 }
+
