@@ -6,10 +6,11 @@
       <div v-for="(sessions, userId) in onlineUsers" :key="userId" class="user-card">
         <h3>用户 ID: {{ userId }}</h3>
         <ul>
-          <li v-for="session in sessions" :key="session.session_id">
+          <li v-for="session in sessions" :key="session.session_id" @click="chakan">
             Session ID: {{ session.session_id }} |
             IP: {{ session.ip || '未知' }} |
             登录时间: {{ formatDate(session.created_at) }}
+            <button @="tixiaxian">踢下线</button>
           </li>
         </ul>
       </div>

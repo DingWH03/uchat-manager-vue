@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:25597', // 后端 API 地址
+        target: 'http://ssh.cxhap.top:25597', // 后端 API 地址
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '') // 去掉前缀
       }

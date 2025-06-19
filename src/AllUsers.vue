@@ -5,6 +5,7 @@
     <ul v-else>
       <li v-for="user in allUsers" :key="user.id">
         {{ user.username }} - {{ user.user_id }}
+        <button @click="zhuxiao">注销此用户</button>
       </li>
     </ul>
     <button @click="goBack">返回首页</button>
