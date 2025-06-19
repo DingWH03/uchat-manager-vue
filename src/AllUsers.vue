@@ -4,7 +4,7 @@
     <div v-if="loading">加载中...</div>
     <ul v-else>
       <li v-for="user in allUsers" :key="user.id">
-        {{ user.name }} - {{ user.email }}
+        {{ user.username }} - {{ user.user_id }}
       </li>
     </ul>
     <button @click="goBack">返回首页</button>
@@ -14,23 +14,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { getUserList } from './api'
 
 const router = useRouter()
 const allUsers = ref([])
 const loading = ref(true)
 
 // 模拟获取所有用户数据
-onMounted(() => {
-  setTimeout(() => {
-    allUsers.value = [
-      { id: 1, name: '张三', email: 'zhangsan@example.com' },
-      { id: 2, name: '李四', email: 'lisi@example.com' },
-      { id: 3, name: '王五', email: 'wangwu@example.com' },
-      { id: 4, name: '赵六', email: 'zhaoliu@example.com' },
-      { id: 5, name: '钱七', email: 'qianqi@example.com' }
-    ]
-    loading.value = false
-  }, 1000)
+onMounted(async () => {
+  const user_list = await getUserList()
+  console.log(user_list)
+  allUsers.value = user_list.data
+  loading.value = false
 })
 
 const goBack = () => {
