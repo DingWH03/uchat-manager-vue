@@ -35,9 +35,14 @@ const formatDate = (dateStr) => {
 
 onMounted(async () => {
   const data = await getOnlineTree()
+  if(data.status==false){
+    alert('出错了')
+  }
+  else{
   console.log(data)
   onlineUsers.value = data.data.users
   loading.value = false
+  }
 })
 
 const goBack = () => {

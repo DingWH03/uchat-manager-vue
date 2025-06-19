@@ -24,9 +24,14 @@ const loading = ref(true)
 // 模拟获取所有用户数据
 onMounted(async () => {
   const user_list = await getUserList()
+  if(user_list.status==false){
+    alert('出错了')
+  }
+  else{
   console.log(user_list)
   allUsers.value = user_list.data
   loading.value = false
+  }
 })
 
 const goBack = () => {
