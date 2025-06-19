@@ -17,14 +17,16 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { getUserList } from './api'
 
 const router = useRouter()
 
-const goToOnlineUsers = () => {
+const goToOnlineUsers = async () => {
+  
   router.push('/online-users')
 }
 
-const goToAllUsers = () => {
+const goToAllUsers = async () => {
   router.push('/all-users')
 }
 </script>
