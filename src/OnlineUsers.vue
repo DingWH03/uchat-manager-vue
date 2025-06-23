@@ -10,7 +10,7 @@
             Session ID: {{ session.session_id }} |
             IP: {{ session.ip || '未知' }} |
             登录时间: {{ formatDate(session.created_at) }}
-            <button @="tixiaxian">踢下线</button>
+            <button @click="offline(session.session_id)">踢下线</button>
           </li>
         </ul>
       </div>
@@ -21,7 +21,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getOnlineTree } from './api'
+import { getOnlineTree, deleteOnlineSession } from './api'
 import dayjs from 'dayjs'
 
 const router = useRouter()
@@ -47,6 +47,21 @@ onMounted(async () => {
 
 const goBack = () => {
   router.push('/')
+}
+
+const offline = async (session_id) => {
+  const result = await deleteOnlineSession(session_id)
+  if (result.status == true) {
+    // 删除成功后，刷新在线用户列表
+    const data = await getOnlineTree()
+    if (data.status == false) {
+      alert('刷新用户列表失败')
+    } else {
+      onlineUsers.value = data.data.users
+    }
+  } else {
+    alert(result.message)
+  }
 }
 </script>
 

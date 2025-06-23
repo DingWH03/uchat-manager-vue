@@ -5,7 +5,7 @@
     <ul v-else>
       <li v-for="user in allUsers" :key="user.id">
         {{ user.username }} - {{ user.user_id }}
-        <button @click="zhuxiao">注销此用户</button>
+        <button @click="delete_user(user.user_id)">注销此用户</button>
       </li>
     </ul>
     <button @click="goBack">返回首页</button>
@@ -15,7 +15,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getUserList } from './api'
+import { getUserList, deleteUser } from './api'
 
 const router = useRouter()
 const allUsers = ref([])
@@ -33,6 +33,21 @@ onMounted(async () => {
   loading.value = false
   }
 })
+
+const delete_user = async (user_id) => {
+  const result = await deleteUser(user_id)
+  if (result.status == true) {
+    // 删除成功后，刷新在线用户列表
+    const user_list = await getUserList()
+    if (user_list.status == false) {
+      alert('刷新用户列表失败')
+    } else {
+      allUsers.value = user_list.data
+    }
+  } else {
+    alert(result.message)
+  }
+}
 
 const goBack = () => {
   router.push('/')

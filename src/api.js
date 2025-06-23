@@ -2,10 +2,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-export async function login(user_id, password) {
-  
-}
-
 export async function getUserList() {
   try {
     const response = await axios.get('/api/manager/user/list', {
@@ -30,6 +26,43 @@ export async function getOnlineTree() {
   }
 }
 
+export async function deleteOnlineSession(session_id) {
+  try {
+    const response = await axios.delete('/api/manager/online/session', {
+      params: { session_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}
+
+
+export async function deleteUser(user_id) {
+  try {
+    const response = await axios.delete('/api/manager/user', {
+      params: { user_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}
+
 // 检查当前 session 是否有效且身份为管理员
 export const checkSession = async () => {
   try {
@@ -38,7 +71,7 @@ export const checkSession = async () => {
     })
     const data = response.data
     console.log('checkSession response:', data)
-    return data.status === true && data.role === 'Admin'
+    return data.status === true && data.data === 'Admin'
   } catch (e) {
     console.error('checkSession error:', e)
     return false
@@ -64,9 +97,9 @@ export const Login = async (userid, password) => {
     )
 
     const data = response.data
-    if (data.status === true && data.message) {
+    if (data.status === true && data.data) {
       // 保存 session_id
-      Cookies.set('session_id', data.message, { expires: 1 })
+      Cookies.set('session_id', data.data, { expires: 1 })
 
       if (await checkSession()) {
         return {status: true, message: 'success'}
@@ -90,3 +123,4 @@ export function logout() {
   // 可选重定向
   window.location.href = '/login'
 }
+

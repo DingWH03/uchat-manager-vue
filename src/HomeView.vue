@@ -17,7 +17,6 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { getUserList } from './api'
 
 const router = useRouter()
 
