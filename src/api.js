@@ -44,6 +44,24 @@ export async function deleteOnlineSession(session_id) {
   }
 }
 
+export async function deleteOnlieSession(session_id) {
+  try {
+    const response = await axios.post('/api/manager/online/session', {
+      params: { session_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}
+
 
 export async function deleteUser(user_id) {
   try {
@@ -124,3 +142,67 @@ export function logout() {
   window.location.href = '/login'
 }
 
+export async function userDetail(user_id) {
+  try {
+    const response = await axios.get('/api/manager/user/detail', {
+      params: { user_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}
+
+export async function changeRole(user_id, new_role) {
+  try {
+    const response = await axios.post(
+      '/api/manager/user/role',
+      {
+        user_id,         // ✅ 这是请求体 (body)
+        new_role
+      },
+      {
+        withCredentials: true, // ✅ 这是配置参数，不要写进 body
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('changeRole error:', error)
+    return {
+      status: false,
+      code: error.response?.status || 500,
+      message: error.response?.data?.message || error.message || '网络错误',
+      data: null
+    }
+  }
+}
+
+
+export async function userFriendlist(user_id) {
+  try {
+    const response = await axios.get('/api/manager/user/detail', {
+      params: { user_id },
+      withCredentials: true, // 携带 cookie
+    })
+
+    return response.data // 应为 ManagerResponse<...>
+  } catch (error) {
+    return {
+      status: false,
+      code: 500,
+      message: error.message || '网络错误',
+      data: null,
+    }
+  }
+}

@@ -4,8 +4,10 @@
     <div v-if="loading">加载中...</div>
     <ul v-else>
       <li v-for="user in allUsers" :key="user.id">
-        {{ user.username }} - {{ user.user_id }}
+        {{ user.username }} - {{ user.user_id }} - {{user.role  }}
         <button @click="delete_user(user.user_id)">注销此用户</button>
+        <button @click="change_role(user.user_id)">改变用户身份</button>
+        <button @click="get_friendlist(user.user_id)">查看好友列表</button>
       </li>
     </ul>
     <button @click="goBack">返回首页</button>
@@ -15,7 +17,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getUserList, deleteUser } from './api'
+import { getUserList, deleteUser, userDetail,changeRole } from './api'
 
 const router = useRouter()
 const allUsers = ref([])
@@ -47,6 +49,35 @@ const delete_user = async (user_id) => {
   } else {
     alert(result.message)
   }
+}
+const change_role=async(user_id)=>{
+  user_id = Number(user_id)
+  const info=await userDetail(user_id)
+    if(info.status==true){
+      if(info.data.role=='Admin'){
+        const result=await changeRole(user_id,'User')
+        console.log(result)
+        if (result.status==true){
+          alert('已改为普通用户')
+        }
+        else{
+          alert('出错了')
+        }
+      }
+      else if(info.data.role=='User'){
+        const result=await changeRole(user_id,'Admin')
+        console.log(result)
+        if (result.status==true){
+          alert('已改为管理员')
+        }
+        else{
+          alert('出错了')
+        }
+      }
+    }
+    else{
+      alert('出错了')
+    }
 }
 
 const goBack = () => {
