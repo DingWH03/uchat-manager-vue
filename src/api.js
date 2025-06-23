@@ -2,10 +2,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-export async function login(user_id, password) {
-  
-}
-
 export async function getUserList() {
   try {
     const response = await axios.get('/api/manager/user/list', {
@@ -75,7 +71,7 @@ export const checkSession = async () => {
     })
     const data = response.data
     console.log('checkSession response:', data)
-    return data.status === true && data.role === 'Admin'
+    return data.status === true && data.data === 'Admin'
   } catch (e) {
     console.error('checkSession error:', e)
     return false
@@ -101,9 +97,9 @@ export const Login = async (userid, password) => {
     )
 
     const data = response.data
-    if (data.status === true && data.message) {
+    if (data.status === true && data.data) {
       // 保存 session_id
-      Cookies.set('session_id', data.message, { expires: 1 })
+      Cookies.set('session_id', data.data, { expires: 1 })
 
       if (await checkSession()) {
         return {status: true, message: 'success'}
